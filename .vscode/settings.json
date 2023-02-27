@@ -1,7 +1,0 @@
-{
-  // Форматирование кода с помощью prettier
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-
-  // Форматирование после сохранения файла
-  "editor.formatOnSave": true
-}

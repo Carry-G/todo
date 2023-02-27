@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import './new-task-form.css'
+import './NewTaskForm.css'
 
 export default class NewTaskForm extends React.Component {
   static defaultProps = {
@@ -23,8 +23,12 @@ export default class NewTaskForm extends React.Component {
 
   onSubmit = (e) => {
     const { label } = this.state
-    const { onItemAdded } = this.props
     e.preventDefault()
+    if (label.trim() === '') {
+      e.preventDefault()
+      return
+    }
+    const { onItemAdded } = this.props
     onItemAdded(label)
     this.setState({
       label: '',

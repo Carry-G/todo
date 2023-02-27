@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import './tasks-filter.css'
+import './TasksFilter.css'
 
-export default class TaskFilter extends React.Component {
+export default class TasksFilter extends React.Component {
   static defaultProps = {
     filterBtn: 'all',
     onFilterChange: () => {},
