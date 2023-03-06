@@ -114,8 +114,8 @@ export default class App extends React.Component {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id)
       const oldItem = todoData[idx]
-      const newItems = { ...oldItem, play: true }
-      const newArray = [...todoData.slice(0, idx), ...newItems, ...todoData.slice(idx + 1)]
+      const newItems = { ...oldItem, play: false }
+      const newArray = [...todoData.slice(0, idx), newItems, ...todoData.slice(idx + 1)]
       return {
         todoData: newArray,
       }
@@ -127,7 +127,7 @@ export default class App extends React.Component {
       const idx = todoData.findIndex((el) => el.id === id)
       const oldItem = todoData[idx]
       const newItems = { ...oldItem, play: true }
-      const newArray = [...todoData.slice(0, idx), ...newItems, ...todoData.slice(idx + 1)]
+      const newArray = [...todoData.slice(0, idx), newItems, ...todoData.slice(idx + 1)]
       return {
         todoData: newArray,
       }
