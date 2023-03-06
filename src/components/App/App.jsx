@@ -113,10 +113,11 @@ export default class App extends React.Component {
   stopTimer = (id) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id)
-      const newObj = [{ ...todoData[idx], play: false }]
-      const newData = [...todoData.slice(0, idx), ...newObj, ...todoData.slice(idx + 1)]
+      const oldItem = todoData[idx]
+      const newItems = { ...oldItem, play: true }
+      const newArray = [...todoData.slice(0, idx), ...newItems, ...todoData.slice(idx + 1)]
       return {
-        todoData: newData,
+        todoData: newArray,
       }
     })
   }
@@ -124,10 +125,11 @@ export default class App extends React.Component {
   startTimer = (id) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id)
-      const newObj = [{ ...todoData[idx], play: true }]
-      const newData = [...todoData.slice(0, idx), ...newObj, ...todoData.slice(idx + 1)]
+      const oldItem = todoData[idx]
+      const newItems = { ...oldItem, play: true }
+      const newArray = [...todoData.slice(0, idx), ...newItems, ...todoData.slice(idx + 1)]
       return {
-        todoData: newData,
+        todoData: newArray,
       }
     })
   }
