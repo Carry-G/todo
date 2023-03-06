@@ -14,18 +14,41 @@ export default class App extends React.Component {
     filterBtn: 'all',
   }
 
-  addItem = (text) => {
-    const newItem = this.creatNewTask(text)
+  componentDidMount() {
+    this.interval = setInterval(() => {
+      this.setState(({ todoData }) => {
+        const newArr = todoData.map((el) => {
+          if (el.time === 0) {
+            return el
+          }
+          if (el.play) {
+            el.time -= 1
+          }
+          return el
+        })
+        return {
+          todoData: newArr,
+        }
+      })
+    }, 1000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
+  }
+
+  addItem = (text, time) => {
+    const newItem = this.creatNewTask(text, time)
     this.setState(({ todoData }) => {
-      const newArray = [...todoData.slice(0), newItem]
+      const newArray = [...todoData, newItem]
       return { todoData: newArray }
     })
   }
 
   deleteTask = (id) => {
     this.setState(({ todoData }) => {
-      const index = todoData.findIndex((el) => el.id === id)
-      const newTodoData = [...todoData.slice(0, index), ...todoData.slice(index + 1)]
+      const idx = todoData.findIndex((el) => el.id === id)
+      const newTodoData = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)]
       return {
         todoData: newTodoData,
       }
@@ -37,7 +60,7 @@ export default class App extends React.Component {
       const idx = todoData.findIndex((el) => el.id === id)
 
       const oldItem = todoData[idx]
-      const newItems = { ...oldItem, completed: !oldItem.completed, check: !oldItem.check }
+      const newItems = { ...oldItem, completed: !oldItem.completed, check: !oldItem.check, play: false }
 
       const newArray = [...todoData.slice(0, idx), newItems, ...todoData.slice(idx + 1)]
       return {
@@ -87,15 +110,39 @@ export default class App extends React.Component {
     })
   }
 
-  creatNewTask(label) {
+  stopTimer = (id) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.id === id)
+      const newObj = [{ ...todoData[idx], play: false }]
+      const newData = [...todoData.slice(0, idx), ...newObj, ...todoData.slice(idx + 1)]
+      return {
+        todoData: newData,
+      }
+    })
+  }
+
+  startTimer = (id) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.id === id)
+      const newObj = [{ ...todoData[idx], play: true }]
+      const newData = [...todoData.slice(0, idx), ...newObj, ...todoData.slice(idx + 1)]
+      return {
+        todoData: newData,
+      }
+    })
+  }
+
+  creatNewTask(label, time) {
     this.maxId += 1
     return {
       label,
+      time,
       completed: false,
       id: this.maxId,
       check: false,
       date: new Date(),
       editing: false,
+      play: false,
     }
   }
 
@@ -115,6 +162,9 @@ export default class App extends React.Component {
             onDeleted={this.deleteTask}
             onToggleCompleted={this.onToggleCompleted}
             changeInput={this.changeInput}
+            // updateTimer={this.updateTimer}
+            stopTimer={this.stopTimer}
+            startTimer={this.startTimer}
           />
           <Footer
             itemsCount={itemsCount}
