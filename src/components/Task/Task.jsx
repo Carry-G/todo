@@ -29,17 +29,28 @@ export default class Task extends React.Component {
   constructor(props) {
     super(props)
     this.state = { label: props.label }
+    this.textInput = React.createRef()
   }
 
-  onLabelChange = (e) => {
+  // componentDidMount() {
+  //   this.textInput.current.focus()
+  // }
+  componentDidUpdate() {
+    const { editing } = this.props
+    if (editing) {
+      this.textInput.current.focus()
+    }
+  }
+
+  onLabelChange = (event) => {
     this.setState({
-      label: e.target.value,
+      label: event.target.value,
     })
   }
 
-  onClickEnter = (e) => {
+  onClickEnter = (event) => {
     const { changeInput } = this.props
-    if (e.keyCode === 13) {
+    if (event.keyCode === 13) {
       changeInput()
     }
   }
@@ -48,8 +59,8 @@ export default class Task extends React.Component {
     const { time, completed, date, check, onDeleted, onToggleCompleted, changeInput, editing, stopTimer, startTimer } =
       this.props
     const { label } = this.state
-    const min = Math.floor(time / 60)
-    const sec = time - min * 60
+    const minutes = Math.floor(time / 60)
+    const seconds = time - minutes * 60
     const timeCreat = new Date()
     const result = formatDistance(date, timeCreat, { includeSeconds: true })
     let classNamesTask
@@ -68,7 +79,7 @@ export default class Task extends React.Component {
               {label}
             </span>
             <span className="description">
-              {`${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`}
+              {`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`}
               <button type="button" className="icon icon-play" aria-label="play" onClick={startTimer} />
               <button type="button" className="icon icon-pause" aria-label="pause" onClick={stopTimer} />
             </span>
@@ -77,7 +88,14 @@ export default class Task extends React.Component {
           <button type="button" aria-label="edit" className="icon icon-edit" onClick={completed ? null : changeInput} />
           <button type="button" aria-label="destroy" className="icon icon-destroy" onClick={onDeleted} />
         </div>
-        <input type="text" onChange={this.onLabelChange} value={label} className="edit" onKeyDown={this.onClickEnter} />
+        <input
+          type="text"
+          onChange={this.onLabelChange}
+          value={label}
+          className="edit"
+          onKeyDown={this.onClickEnter}
+          ref={this.textInput}
+        />
       </li>
     )
   }

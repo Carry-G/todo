@@ -13,47 +13,47 @@ export default class NewTaskForm extends React.Component {
 
   state = {
     label: '',
-    min: '',
-    sec: '',
+    minutes: '',
+    seconds: '',
   }
 
-  onMinChange = (e) => {
+  onMinChange = (event) => {
     this.setState({
-      min: e.target.value,
+      minutes: event.target.value,
     })
   }
 
-  onSecChange = (e) => {
+  onSecChange = (event) => {
     this.setState({
-      sec: e.target.value,
+      seconds: event.target.value,
     })
   }
 
-  onLabelChange = (e) => {
+  onLabelChange = (event) => {
     this.setState({
-      label: e.target.value,
+      label: event.target.value,
     })
   }
 
-  onSubmit = (e) => {
-    const { label, min, sec } = this.state
-    const time = Number(min) * 60 + Number(sec)
-    e.preventDefault()
+  onSubmit = (event) => {
+    const { label, minutes, seconds } = this.state
+    const time = Number(minutes) * 60 + Number(seconds)
+    event.preventDefault()
     if (label.trim() === '') {
-      e.preventDefault()
+      event.preventDefault()
       return
     }
     const { onItemAdded } = this.props
     onItemAdded(label, time)
     this.setState({
       label: '',
-      min: '',
-      sec: '',
+      minutes: '',
+      seconds: '',
     })
   }
 
   render() {
-    const { label, min, sec } = this.state
+    const { label, minutes, seconds } = this.state
     return (
       <header className="header">
         <h1>Todos</h1>
@@ -69,14 +69,14 @@ export default class NewTaskForm extends React.Component {
             className="new-todo-form__timer"
             placeholder="Min"
             onChange={this.onMinChange}
-            value={min}
+            value={minutes}
           />
           <input
             type="number"
             className="new-todo-form__timer"
             placeholder="Sec"
             onChange={this.onSecChange}
-            value={sec}
+            value={seconds}
           />
           <input type="submit" style={{ display: 'none' }} />
         </form>

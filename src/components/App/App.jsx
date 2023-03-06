@@ -1,8 +1,8 @@
 import React from 'react'
 
-import TaskList from '../TaskList/TaskList'
-import NewTaskForm from '../NewTaskForm/NewTaskForm'
-import Footer from '../Footer/Footer'
+import TaskList from '../TaskList'
+import NewTaskForm from '../NewTaskForm'
+import Footer from '../Footer'
 
 import './App.css'
 
@@ -11,20 +11,20 @@ export default class App extends React.Component {
 
   state = {
     todoData: [],
-    filterBtn: 'all',
+    filterButtons: 'all',
   }
 
   componentDidMount() {
     this.interval = setInterval(() => {
       this.setState(({ todoData }) => {
-        const newArr = todoData.map((el) => {
-          if (el.time === 0) {
-            return el
+        const newArr = todoData.map((item) => {
+          if (item.time === 0) {
+            return item
           }
-          if (el.play) {
-            el.time -= 1
+          if (item.play) {
+            item.time -= 1
           }
-          return el
+          return item
         })
         return {
           todoData: newArr,
@@ -47,7 +47,7 @@ export default class App extends React.Component {
 
   deleteTask = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id)
+      const idx = todoData.findIndex((item) => item.id === id)
       const newTodoData = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)]
       return {
         todoData: newTodoData,
@@ -57,7 +57,7 @@ export default class App extends React.Component {
 
   onToggleCompleted = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id)
+      const idx = todoData.findIndex((item) => item.id === id)
 
       const oldItem = todoData[idx]
       const newItems = { ...oldItem, completed: !oldItem.completed, check: !oldItem.check, play: false }
@@ -69,13 +69,13 @@ export default class App extends React.Component {
     })
   }
 
-  onFilterChange = (filterBtn) => {
-    this.setState({ filterBtn })
+  onFilterChange = (filterButtons) => {
+    this.setState({ filterButtons })
   }
 
   clearCompleted = () => {
     this.setState(({ todoData }) => {
-      const newArray = todoData.filter((el) => !el.completed)
+      const newArray = todoData.filter((item) => !item.completed)
       return {
         todoData: [...newArray],
       }
@@ -83,8 +83,8 @@ export default class App extends React.Component {
   }
 
   filterItem = () => {
-    const { todoData, filterBtn } = this.state
-    switch (filterBtn) {
+    const { todoData, filterButtons } = this.state
+    switch (filterButtons) {
       case 'all':
         return todoData
       case 'active':
@@ -98,7 +98,7 @@ export default class App extends React.Component {
 
   changeInput = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id)
+      const idx = todoData.findIndex((item) => item.id === id)
 
       const oldItem = todoData[idx]
       const newItems = { ...oldItem, editing: !oldItem.editing }
@@ -112,7 +112,7 @@ export default class App extends React.Component {
 
   stopTimer = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id)
+      const idx = todoData.findIndex((item) => item.id === id)
       const oldItem = todoData[idx]
       const newItems = { ...oldItem, play: false }
       const newArray = [...todoData.slice(0, idx), newItems, ...todoData.slice(idx + 1)]
@@ -124,7 +124,7 @@ export default class App extends React.Component {
 
   startTimer = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id)
+      const idx = todoData.findIndex((item) => item.id === id)
       const oldItem = todoData[idx]
       const newItems = { ...oldItem, play: true }
       const newArray = [...todoData.slice(0, idx), newItems, ...todoData.slice(idx + 1)]
@@ -149,8 +149,8 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { todoData, filterBtn } = this.state
-    const itemsCount = todoData.filter((el) => !el.completed).length
+    const { todoData, filterButtons } = this.state
+    const itemsCount = todoData.filter((item) => !item.completed).length
     const visibleItems = this.filterItem()
 
     return (
@@ -164,13 +164,12 @@ export default class App extends React.Component {
             onDeleted={this.deleteTask}
             onToggleCompleted={this.onToggleCompleted}
             changeInput={this.changeInput}
-            // updateTimer={this.updateTimer}
             stopTimer={this.stopTimer}
             startTimer={this.startTimer}
           />
           <Footer
             itemsCount={itemsCount}
-            filterBtn={filterBtn}
+            filterButtons={filterButtons}
             onFilterChange={this.onFilterChange}
             clearCompleted={this.clearCompleted}
           />
